@@ -1,5 +1,5 @@
-# include "BitArray.h"
-#include "stdio.h"
+#include "BitArray.h"
+#include <stdio.h>
 
 int main() {
 	
