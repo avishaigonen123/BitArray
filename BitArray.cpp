@@ -1,23 +1,28 @@
 #include "BitArray.h"
-#include "Error.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 BitArray::BitArray() {
-	capacity = 0;
-	size = 0;
-	storage = nullptr;
+	m_capacity = 0;
+	m_size = 0;
+	m_storage = NULL;
 	resize(1);
 }
 
 BitArray::BitArray(const BitArray& copy) {
-	delete[] this->storage;
-	this->storage = nullptr;
+	free(m_storage);
+	this->m_storage = NULL;
 
-	this->size = copy.size;
-	this->capacity = copy.capacity;
-	this->storage = new size_t[this->capacity];
-
-	for (size_t i = 0; i < this->capacity; i++)
-		this->storage[i] = copy.storage[i];
+	this->m_size = copy.m_size;
+	this->m_capacity = copy.m_capacity;
+	this->m_storage = new size_t[this->m_capacity];
+	this->m_storage = (size_t*)malloc(this->m_capacity * sizeof(size_t));
+	if (!this->m_storage) {
+		printf("Error memory allocation\n");
+		return;
+	}
+	for (size_t i = 0; i < this->m_capacity; i++)
+		this->m_storage[i] = copy.m_storage[i];
 }
 
 BitArray::~BitArray() {
