@@ -7,13 +7,13 @@
  */
 class BitArray {
 private:
-	size_t* m_storage; 
-	size_t m_size_bits;	 
+	size_t* m_storage;
+	size_t m_size_bits;
 	size_t m_capacity_bytes;
 
 	/**
 	 * @brief internal method for scaling the capacity of the storage. Can't shrink the capacity, will fail if trying to do so.
-	 * @param new_capacity 
+	 * @param new_capacity
 	*/
 	void scale(size_t new_capacity);
 
@@ -52,5 +52,21 @@ public:
 	 * @return the value, if it fails, it can return different error codes
 	*/
 	size_t getAt(size_t index) const;
+
+	/**
+	 * @brief function that gets pointer to binary str and fill it with the bits from our storage
+	 * @param o_binaryStr the buffer we will fill
+	 * @param binaryStrSize the number of bits we want to fill
+	 * @return status code of the operation, can return some error status code too
+	*/
+	size_t toBinaryStr(char* o_binaryStr, size_t binaryStrSize) const;
+
+	/**
+	 * @brief function that gets const string and fill the storage with this string, at the length of another given parameter
+	 * @param i_binaryStr the const string that holds the characters which will be the bits
+	 * @param binaryStrLen the length of string
+	 * @return status code of the operation, can return some error status code too
+	*/
+	size_t fromBinaryStr(const char* i_binaryStr, size_t binaryStrLen);
 };
 # endif
