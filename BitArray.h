@@ -12,4 +12,7 @@ public:
 
 	void SetAt(size_t index, bool value);
 	bool GetAt(size_t index) const;
+
+	bool ToBinaryStr(char* o_binaryStr, size_t binaryStrSize) const;
+	bool FromBinaryStr(const char* i_binaryStr, size_t binaryStrLen);
 };
