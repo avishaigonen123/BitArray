@@ -95,5 +95,23 @@ int main() {
 		return handle_error((Error)val);
 	printf("comparing check result: %s\n", val ? "false" : "true");
 
+	// test compare
+	copy = new BitArray(*bitArray);
+	CHECK_AND_PRINT("value at index %d is: %d\n", bitArray->getAt(index), index);
+
+	val = bitArray->compare(*copy);
+	if (val > 1)
+		return handle_error((Error)val);
+	printf("comparing check result: %s\n", val ? "false" : "true");
+	index = 2;
+	copy->setAt(index, true);
+	CHECK_AND_PRINT("bitArray1: value at index %d is: %d\n", bitArray->getAt(index), index);
+	bitArray->setAt(index, false);
+	CHECK_AND_PRINT("bitArray2: value at index %d is: %d\n", bitArray->getAt(index), index);
+	val = bitArray->compare(*copy);
+	if (val > 1)
+		return handle_error((Error)val);
+	printf("comparing check result: %s\n", val ? "false" : "true");
+
 	return 0;
 }
