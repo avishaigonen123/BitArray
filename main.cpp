@@ -38,53 +38,27 @@ int handle_error(Error err) {
 }
 
 int main() {
-	BitArray* bitArray = new BitArray();
-	// test set and get
-	size_t val, index;
-	bitArray->SetAt(0, true);
-	bitArray->SetAt(2, true);
-	bitArray->SetAt(3, true);
-	bitArray->SetAt(4, false);
-	
-	index = 3;
-	CHECK_AND_PRINT("val at index %d is %d\n", bitArray->GetAt(index), index);
+	BitArray *bitarray = new BitArray();
+	for (int i = 0; i < 20; i++)
+	{
+		bitarray->SetAt(i, 0);
+		printf("%d", bitarray->GetAt(i));
+	}
+	printf("\n");
 
-	bool value = true;
-	printf("Set value at index %d to %d\n", index, value);
-	bitArray->SetAt(index, value);
-	
-	CHECK_AND_PRINT("value at index %d is: %d\n", bitArray->GetAt(index), index);
-	CHECK_AND_PRINT("value at index %d is: %d\n", (*bitArray)[index], index);
-
-
-	// test ToBinary and FromBinary
-	const char* a = "1001000110";
-	char* b;
-	bitArray->FromBinaryStr(a, 10);
-	b = new char[11];
-	val = bitArray->ToBinaryStr(b, 10);
-	if (val > 1)
-		return handle_error((Error)val);
-	printf("string is %s\n", b);
-
-	// test compare feature
-	BitArray copy = BitArray(*bitArray);
-	CHECK_AND_PRINT("value at index %d is: %d\n", bitArray->GetAt(index), index);
-
-	val = bitArray->compare(copy);
-	if (val > 1)
-		return handle_error((Error)val);
-	printf("comparing check result: %s\n", val ? "false" : "true");
-	copy.SetAt(2, true);
-	bitArray->SetAt(2, false);
-	val = bitArray->compare(copy);
-	if (val > 1)
-		return handle_error((Error)val);
-	printf("comparing check result: %s\n", val ? "false" : "true");
-	index = 2;
-	CHECK_AND_PRINT("value at index %d for bitArray is: %d\n", bitArray->GetAt(index), index);
-	CHECK_AND_PRINT("value at index %d for copy is: %d\n", copy.GetAt(index), index);
-
+	for (int i = 0; i < 10; i++)
+	{
+		bitarray->SetAt(i, 1);
+		printf("%d", bitarray->GetAt(i));
+	}
+	printf("\n");
+	//bitarray->SetAt(5, 1);
+	bitarray->SetAt(5, 0);
+	//bitarray->SetAt(16, 1);
+	for (int i = 0; i < 34; i++)
+	{
+		printf("%d", bitarray->GetAt(i));
+	}
+	printf("\n");
 	return 0;
 }
-
