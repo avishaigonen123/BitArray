@@ -68,5 +68,19 @@ public:
 	 * @return status code of the operation, can return some error status code too
 	*/
 	size_t fromBinaryStr(const char* i_binaryStr, size_t binaryStrLen);
+	
+	/**
+	 * @brief operator [] to get value by index, same as getAt
+	 * @param index the exact location of the bit to get
+	 * @return the value of the bit, or error status code if some error occurred.
+	*/
+	size_t operator[](size_t index) const;
+
+	/**
+	 * @brief compare two bit arrays bit by bit, and return result or error status code
+	 * @param other the bit array to compare to
+	 * @return the result of the comparison (0 equal 1 not equal), or any other error status code if something is wrong
+	*/
+	size_t compare(const BitArray& other) const;
 };
 # endif

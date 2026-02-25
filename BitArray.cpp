@@ -161,3 +161,32 @@ size_t BitArray::fromBinaryStr(const char* i_binaryStr, size_t binaryStrLen) {
 
 	return 0;
 }
+
+size_t BitArray::operator[](size_t index) const {
+	return this->getAt(index);
+}
+
+size_t BitArray::compare(const BitArray& other) const{
+	int i = this->m_size_bits;
+	int j = 0;
+
+	// bit sizes not match, compare failess
+	if (this->m_size_bits != other.m_size_bits)
+		return 1;
+
+	// check for each byte
+	while (i > 7) {
+		if (this->m_storage[j] - other.m_storage[j] != 0) // if different than 0 (1-1 = 0-0 = 0)
+			return 1;
+		i -= 8;
+		j++;
+	}
+	// check for the remains bit
+	if (i) { 
+		for (i = this->m_size_bits % 8; i>0; i--)
+			if ((this->m_storage[j] >> i) - (other.m_storage[j] >> i) != 0) // if different than 0 (1-1 = 0-0 = 0)
+				return 1;
+	}
+
+	return 0;
+}
