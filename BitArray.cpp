@@ -103,8 +103,11 @@ bool BitArray::ToBinaryStr(char* o_binaryStr, size_t binaryStrSize) const {
 bool BitArray::FromBinaryStr(const char* i_binaryStr, size_t binaryStrLen) {
 	int bit_size = binaryStrLen * 8;
 	if (binaryStrLen > this->size)
-		return 1;
-	// I guess I don't need to adjust the size according to the input from the binary str
+	{
+		this->size = binaryStrLen;
+		delete this->storage;
+		this->storage = new char[binaryStrLen];
+	}
 
 	const char* ptr = i_binaryStr;
 	char loc;
