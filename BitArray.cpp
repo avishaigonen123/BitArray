@@ -79,3 +79,48 @@ size_t BitArray::GetAt(size_t index) const {
 
 	return (this->storage[bytes] >> (bits)) & 1; // take the right byte, shift right, and mask with 1 (to get the exact bit)
 }
+bool BitArray::ToBinaryStr(char* o_binaryStr, size_t binaryStrSize) const {
+	if (binaryStrSize < this->size) // maybe need to adjust this
+		return 1;
+
+	o_binaryStr = new char[binaryStrSize + 1]; // the size already include the null (that's what I understood)
+	char* ptr = o_binaryStr;
+	char loc;
+	char opt[2] = { '0','1' };
+	for (size_t i = 0; i < binaryStrSize; i++) {
+		loc = this->storage[i];
+		for (int j = 7; j >= 0; j--)
+		{
+			*ptr = opt[(loc >> j) & 1];
+			ptr++;
+		}
+	}
+	ptr = '\0';
+
+	return 0;
+}
+
+bool BitArray::FromBinaryStr(const char* i_binaryStr, size_t binaryStrLen) {
+	int bit_size = binaryStrLen * 8;
+	if (binaryStrLen > this->size)
+		return 1;
+	// I guess I don't need to adjust the size according to the input from the binary str
+
+	const char* ptr = i_binaryStr;
+	char loc;
+	for (size_t i = 0; i < binaryStrLen; i++)
+	{
+		loc = '\0';
+		for (int j = 7; j >= 0; j--)
+		{
+			loc += (*ptr) - '0'; // 0 or 1
+			1 << loc;
+			ptr++;
+		}
+		this->storage[i] = loc;
+	}
+
+	return 0;
+}
+
+
