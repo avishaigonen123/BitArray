@@ -146,4 +146,7 @@ size_t BitArray::FromBinaryStr(const char* i_binaryStr, size_t binaryStrLen) {
 	return 0;
 }
 
+bool BitArray::operator[](size_t index) const {
+	return this->GetAt(index);
+}
 

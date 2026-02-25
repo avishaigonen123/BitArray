@@ -20,6 +20,7 @@ public:
 
 	size_t ToBinaryStr(char* o_binaryStr, size_t binaryStrSize) const;
 	size_t FromBinaryStr(const char* i_binaryStr, size_t binaryStrLen);
-
 	
+
+	bool operator[](size_t index) const;
 };
