@@ -22,4 +22,6 @@ public:
 	size_t FromBinaryStr(const char* i_binaryStr, size_t binaryStrLen);
 	
 	bool operator[](size_t index) const;
+
+	bool compare(const BitArray& other) const;
 };

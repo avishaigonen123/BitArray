@@ -149,3 +149,19 @@ size_t BitArray::FromBinaryStr(const char* i_binaryStr, size_t binaryStrLen) {
 bool BitArray::operator[](size_t index) const {
 	return this->GetAt(index);
 }
+
+bool BitArray::compare(const BitArray& other) const{
+	if (this->size != other.size)
+		return 1;
+
+	int i = this->size;
+	int j = 0;
+	while (i > 7) {
+		if (this->storage[j] ^ other.storage[j]) // if different than 0
+			return 1;
+		i -= 8;
+		j++;
+	}
+		return (this->storage[j] >> (7 - i)) ^ (other.storage[j] >> (7 - i));
+}
+
