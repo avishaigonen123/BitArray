@@ -30,6 +30,9 @@ size_t BitArray::getSize() const
 }
 
 void BitArray::resize(size_t new_capacity) {
+	if (new_capacity < capacity) // resizing can't work
+		return;
+
 	size_t* tmp;
 	tmp = this->storage;
 
