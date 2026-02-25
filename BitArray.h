@@ -10,5 +10,6 @@ public:
 	BitArray(const BitArray& copy);
 	~BitArray();
 
-	
+	void SetAt(size_t index, bool value);
+	bool GetAt(size_t index) const;
 };
