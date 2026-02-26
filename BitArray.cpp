@@ -67,3 +67,6 @@ bool BitArray::GetAt(size_t index) const {
 	return (this->storage[bytes] >> (bits - 1)) & 1; // take the right bytes, shift right, and mask with 1 (to get the exact bit)
 }
 
+size_t BitArray::GetSize() const {
+	return size;
+}
