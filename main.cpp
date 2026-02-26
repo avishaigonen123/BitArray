@@ -34,6 +34,6 @@ int handle_error(Error err) {
 }
 
 int main() {
-	
+
 	return 0;
 }
