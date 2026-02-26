@@ -1,26 +1,50 @@
 #include "BitArray.h"
 
 BitArray::BitArray() {
-	storage = new char[1];
-	storage[0] = '\0';
+	capacity = 0;
 	size = 0;
+	storage = nullptr;
+	resize(1);
 }
 
 BitArray::BitArray(const BitArray& copy) {
-	delete this->storage;
+	delete[] this->storage;
 	this->storage = nullptr;
 
 	this->size = copy.size;
-	this->storage = new char[this->size];
+	this->capacity = copy.capacity;
+	this->storage = new size_t[this->capacity];
 
-	for (size_t i = 0; i < this->size; i++)
+	for (size_t i = 0; i < this->capacity; i++)
 		this->storage[i] = copy.storage[i];
 }
 
 BitArray::~BitArray() {
-	this->size = 0;
-	
-	delete this->storage;
+	delete[] this->storage;
 	this->storage = nullptr;
+}
+
+size_t BitArray::getSize() const
+{
+	return this->size;
+}
+
+void BitArray::resize(size_t new_capacity) {
+	size_t* tmp;
+	tmp = this->storage;
+
+	this->storage = new size_t[new_capacity];
+	size_t i;
+	for (i = 0; i < capacity; i++)
+	{
+		this->storage[i] = tmp[i];
+	}
+	for (; i < new_capacity; i++)
+	{
+		this->storage[i] = '\0';
+	}
+
+	delete[]tmp;
+	tmp = nullptr;
 }
 
