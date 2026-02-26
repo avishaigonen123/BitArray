@@ -66,7 +66,7 @@ void BitArray::SetAt(size_t index, bool value) {
 	if (value) 
 		this->storage[bytes] = this->storage[bytes] | (bits ? (1 << bits) : 1); // OR 00010000
 	else
-		this->storage[bytes] = this->storage[bytes] & (bits ? ~(1 << bits) : 0xff);// AND 11101111
+		this->storage[bytes] = this->storage[bytes] & (bits ? ~(1 << bits) : 0xfe);// AND 11101111
 }
 
 // - Answer: function is const becuase i don't want to change to values of the fields at "this", the class.
@@ -79,19 +79,19 @@ size_t BitArray::GetAt(size_t index) const {
 
 	return (this->storage[bytes] >> (bits)) & 1; // take the right byte, shift right, and mask with 1 (to get the exact bit)
 }
-bool BitArray::ToBinaryStr(char* o_binaryStr, size_t binaryStrSize) const {
-	if (binaryStrSize > this->size) // maybe need to adjust this
-		return 1;
 
-	char* ptr = o_binaryStr;
-	char* ptr_storage = this->storage;
-	char loc;
-	char opt[2] = { '0','1' };
-	for (int i = binaryStrSize; i > 0;) {
-		loc = *ptr_storage;
-		for (int j = 7; j >= 0 && i > 0; i--, j--)
+size_t BitArray::ToBinaryStr(char* o_binaryStr, size_t binaryStrSize) const {
+	if (binaryStrSize > this->size) // bigger than the size
+		return HeapOverflow;
+
+	char* ptr = o_binaryStr; // we'll move and add the characters. I assume a place had already been allocated at o_binaryStr
+	size_t* ptr_storage = this->storage;
+	size_t curr, i = 0;
+	while(i < binaryStrSize) {
+		curr = *ptr_storage;
+		for (int j = 0; j < 8 && i < binaryStrSize; i++, j++)
 		{
-			*ptr = opt[(loc >> j) & 1];
+			*ptr = ((curr >> j) & 1) ? '1' : '0';
 +			ptr++;
 		}
 		ptr_storage++;
@@ -101,33 +101,48 @@ bool BitArray::ToBinaryStr(char* o_binaryStr, size_t binaryStrSize) const {
 	return 0;
 }
 
-bool BitArray::FromBinaryStr(const char* i_binaryStr, size_t binaryStrLen) {
+size_t BitArray::FromBinaryStr(const char* i_binaryStr, size_t binaryStrLen) {
 	if (binaryStrLen > this->size) // I assume binaryStrLen is without NULL
-	{
-		this->size = binaryStrLen;
-		delete this->storage;
-		this->storage = new char[binaryStrLen+1];
-	}
+		this->SetAt(binaryStrLen, false); // we'll call resize with the right capacity
+
+	this->size = binaryStrLen;
+
+	// Check for binary values
+	for (int i = 0; i < binaryStrLen; i++)
+		if (i_binaryStr[i] != '0' && i_binaryStr[i] != '1')
+			return NotBinaryValue;
 
 	const char* ptr = i_binaryStr;
-	char* ptr_storage = this->storage;
-	char loc;
-	for (int i = binaryStrLen; i > 0;) {
-		loc = '\0';
-		for (int j = 0; j < 8 && i > 0; i--, j++)
+	size_t* ptr_storage = this->storage;
+	size_t loc = '\0', i = 0;
+	size_t bytes = binaryStrLen / 8;
+	size_t bits = binaryStrLen % 8;
+
+	for (size_t i = 0; i < bytes; i++)
+	{
+		for (int j = 7; j >= 0; j--)
 		{
-			loc = loc << 1; // built the number, shift right by 1
-			if (*ptr - '0' == 0) // this is '0'
-				loc &= ~1;
-			else
+			loc = loc << 1; // built the number, shift left by 1
+			if (ptr[8*i + j] - '0') // this is '1'
 				loc |= 1;
-			ptr++;
+			else            // this is '0'
+				loc &= ~1;
 		}
 		*ptr_storage = loc;
 		ptr_storage++;
+		loc = '\0';
 	}
-
-
+	if (bits) {
+		for (int j = bits-1; j >= 0; j--)
+		{
+			loc = loc << 1; // built the number, shift left by 1
+			if (ptr[8 * bytes + j] - '0') // this is '1'
+				loc |= 1;
+			else            // this is '0'
+				loc &= ~1;
+		}
+		*ptr_storage = loc;
+	}
 	return 0;
 }
 

@@ -18,8 +18,8 @@ public:
 	size_t GetAt(size_t index) const;
 	void SetAt(size_t index, bool value);
 
-	bool ToBinaryStr(char* o_binaryStr, size_t binaryStrSize) const;
-	bool FromBinaryStr(const char* i_binaryStr, size_t binaryStrLen);
+	size_t ToBinaryStr(char* o_binaryStr, size_t binaryStrSize) const;
+	size_t FromBinaryStr(const char* i_binaryStr, size_t binaryStrLen);
 
 	
 };
