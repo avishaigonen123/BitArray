@@ -29,11 +29,6 @@ int handle_error(Error err) {
 	return -1;
 }
 
-bool Error(const char* str) {
-	printf("%s\n", str);
-	return false;
-}
-
 int main() {
 	BitArray* bitArray = new BitArray();
 	// test set and get
