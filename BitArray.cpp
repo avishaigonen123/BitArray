@@ -1,4 +1,5 @@
 #include "BitArray.h"
+#include "Error.h"
 
 BitArray::BitArray() {
 	capacity = 0;
@@ -46,27 +47,35 @@ void BitArray::resize(size_t new_capacity) {
 	{
 		this->storage[i] = '\0';
 	}
+	capacity = new_capacity;
 
 	delete[]tmp;
 	tmp = nullptr;
 }
 
+// - Answer: size_t becuase i don't want negetive value (and then might have heap underflow)
 void BitArray::SetAt(size_t index, bool value) {
-	// size_t becuase i don't want negetive value (and then might have heap underflow)
 	size_t bytes = index / 8;
 	size_t bits = index % 8;
-	char mask = !((bits << 1) & this->storage[bytes]); // I want mask, like 11101111
 
-	this->storage[bytes] = (this->storage[bytes] & mask) + (bits << 1); // turn of the bit with inx, and add it after left shift. 
+	if (this->capacity * 8 < index) // we need more capacity
+		resize(bytes + 1);
+	if (this->size < index) // enlarge the size
+		this->size = index;
+
+	if (value) 
+		this->storage[bytes] = this->storage[bytes] | (bits ? (1 << bits) : 1); // OR 00010000
+	else
+		this->storage[bytes] = this->storage[bytes] & (bits ? ~(1 << bits) : 0xff);// AND 11101111
 }
 
-bool BitArray::GetAt(size_t index) const {
-	// function is const becuase i don't want to change to values of the fields at "this", the class.
+// - Answer: function is const becuase i don't want to change to values of the fields at "this", the class.
+size_t BitArray::GetAt(size_t index) const {
+	if (index > size)
+		return OutOfBound;
+	
 	size_t bytes = index / 8;
 	size_t bits = index % 8;
-	return (this->storage[bytes] >> (bits - 1)) & 1; // take the right bytes, shift right, and mask with 1 (to get the exact bit)
-}
 
-size_t BitArray::GetSize() const {
-	return size;
+	return (this->storage[bytes] >> (bits)) & 1; // take the right byte, shift right, and mask with 1 (to get the exact bit)
 }

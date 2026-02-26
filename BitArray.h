@@ -15,7 +15,7 @@ public:
 	~BitArray();
 
 	void SetAt(size_t index, bool value);
-	bool GetAt(size_t index) const;
+	size_t GetAt(size_t index) const;
 	size_t getSize() const;
 
 	
