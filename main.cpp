@@ -113,5 +113,32 @@ int main() {
 		return handle_error((Error)val);
 	printf("comparing check result: %s\n", val ? "false" : "true");
 
+	// test GetSubArray
+	val = bitArray->fromBinaryStr(str, size);
+	if (val > 1) {
+		if (ErrorHandling(err))
+			return -1;
+	}
+	a = new char[size];
+	if (err = (Error)bitArray->ToBinaryStr(a, size)) {
+		if (ErrorHandling(err))\
+			return -1;
+	}
+	printf("array is: %s\n", a);
+
+	size_t first = 2;
+	size_t last = 9;
+	BitArray* sub_array = SpecialMethdos::GetSubArray(*bitArray, first, last);
+	size = last - first + 1;
+	a = new char[size];
+	if (err = (Error)sub_array->ToBinaryStr(a, size)) {
+		if (ErrorHandling(err))
+			return -1;
+	}
+	printf("first is %d, last is %d, sub array is: %s\n", first, last, a);
+	
+	SpecialMethdos::PrintHex(*bitArray);
+	SpecialMethdos::PrintHex(*sub_array);
+
 	return 0;
 }
