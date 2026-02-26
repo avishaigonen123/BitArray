@@ -2,6 +2,14 @@
 #include "stdio.h"
 #include "Error.h"
 
+#define CHECK_AND_PRINT(format, expr, index)             \
+    do {                                                 \
+        int val = (expr);                                \
+        if (val > 1)                                     \
+            return handle_error((Error)val);             \
+        printf(format, index, val);\
+    } while(0)
+
 int handle_error(Error err) {
 	switch (err)
 	{	
@@ -38,16 +46,15 @@ int main() {
 	bitArray->SetAt(3, true);
 	bitArray->SetAt(4, false);
 	
-	index = 3, val = bitArray->GetAt(index);
-	if (val > 1)
-		return handle_error((Error)val);
-	printf("val at index %d is %s\n", index, val ? "true" : "false");
+	index = 3;
+	CHECK_AND_PRINT("val at index %d is %d\n", bitArray->GetAt(index), index);
 
 	bool value = true;
 	printf("Set value at index %d to %d\n", index, value);
 	bitArray->SetAt(index, value);
-	printf("value at index %d is: %d\n", index, bitArray->GetAt(index));
-	printf("value at index %d is: %d\n", index, (*bitArray)[index]);
+	
+	CHECK_AND_PRINT("value at index %d is: %d\n", bitArray->GetAt(index), index);
+	CHECK_AND_PRINT("value at index %d is: %d\n", (*bitArray)[index], index);
 
 
 	// test ToBinary and FromBinary
@@ -62,15 +69,21 @@ int main() {
 
 	// test compare feature
 	BitArray copy = BitArray(*bitArray);
-	printf("comparing check result at %d\n", bitArray->compare(copy));
-	copy.SetAt(2, false);
-	printf("comparing check result at %d\n", bitArray->compare(copy));
-	index = 4, val = bitArray->GetAt(index);
+	CHECK_AND_PRINT("value at index %d is: %d\n", bitArray->GetAt(index), index);
+
+	val = bitArray->compare(copy);
 	if (val > 1)
 		return handle_error((Error)val);
-	printf("val at index %d is %s\n", index, val ? "true" : "false");
-
-	
+	printf("comparing check result: %s\n", val ? "false" : "true");
+	copy.SetAt(2, true);
+	bitArray->SetAt(2, false);
+	val = bitArray->compare(copy);
+	if (val > 1)
+		return handle_error((Error)val);
+	printf("comparing check result: %s\n", val ? "false" : "true");
+	index = 2;
+	CHECK_AND_PRINT("value at index %d for bitArray is: %d\n", bitArray->GetAt(index), index);
+	CHECK_AND_PRINT("value at index %d for copy is: %d\n", copy.GetAt(index), index);
 
 	return 0;
 }

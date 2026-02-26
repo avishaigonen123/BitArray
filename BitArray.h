@@ -21,7 +21,7 @@ public:
 	size_t ToBinaryStr(char* o_binaryStr, size_t binaryStrSize) const;
 	size_t FromBinaryStr(const char* i_binaryStr, size_t binaryStrLen);
 	
-	bool operator[](size_t index) const;
+	size_t operator[](size_t index) const;
 
-	bool compare(const BitArray& other) const;
+	size_t compare(const BitArray& other) const;
 };
