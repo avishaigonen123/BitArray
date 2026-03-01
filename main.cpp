@@ -8,26 +8,26 @@
  * @return 0 if success, -1 if fails
 */
 int handle_error(Error err) {
-	switch (err) {	
-		case Success:
-			printf("success\n");
-			return 0;
-			break;
-		case OutOfBound:
-			printf("Out of bound\n");
-			break;
-		case HeapOverflow:
-			printf("Heap overflow\n");
-			break;
-		case HeapUnderflow:
-			printf("Heap underflow\n");
-			break;
-		case SizeNotMatch:
-			printf("Sizes not match\n");
-			break;
-		default:
-			printf("Unknown error\n");
-			break;
+	switch (err) {
+	case Success:
+		printf("success\n");
+		return 0;
+		break;
+	case OutOfBound:
+		printf("Out of bound\n");
+		break;
+	case HeapOverflow:
+		printf("Heap overflow\n");
+		break;
+	case HeapUnderflow:
+		printf("Heap underflow\n");
+		break;
+	case SizeNotMatch:
+		printf("Sizes not match\n");
+		break;
+	default:
+		printf("Unknown error\n");
+		break;
 	}
 
 	return -1;
@@ -41,7 +41,7 @@ int main() {
 	bitArray->setAt(2, true);
 	bitArray->setAt(3, true);
 	bitArray->setAt(4, false);
-	
+
 	val = bitArray->getAt(index);
 	if (val > 1)
 		return handle_error((Error)val);
