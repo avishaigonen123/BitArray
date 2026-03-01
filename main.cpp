@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "BitArray.h"
 #include "Error.h"
+#include "SpecialMethdos.h"
 
 // Macro chatGPT created for me in order to save time when calling to functions like setAt, getAt and operator[]
 #define CHECK_AND_PRINT(format, expr, index)             \
@@ -47,11 +48,12 @@ int main() {
 	// but now, How do I call the ctor? 
 	//BitArray* bitArray = (BitArray*)malloc(sizeof(BitArray));
 	BitArray* bitArray = new BitArray();
-	size_t val = 0, index = 0;
+	size_t val = 0, index = 0, first = 0, last = 0;
 	bool value = false;
 	const char* const_binary_string = "1001000110";
 	char* binary_string = NULL;
-	BitArray *copy = NULL;
+	size_t const_binary_string_size = 10, binary_string_size = 10;
+	BitArray *copy = NULL, *sub_array = NULL;
 
 	// test set and get
 	bitArray->setAt(0, true);
@@ -69,13 +71,12 @@ int main() {
 	CHECK_AND_PRINT("value at index %d is: %d\n", bitArray->getAt(index), index);
 
 	// test toBinary and fromBinary
-	bitArray->fromBinaryStr(const_binary_string, 10);
+	bitArray->fromBinaryStr(const_binary_string, const_binary_string_size);
 	binary_string = (char*)malloc(11 * sizeof(char));
-	val = bitArray->toBinaryStr(binary_string, 10);
+	val = bitArray->toBinaryStr(binary_string, binary_string_size);
 	if (val > 1)
 		return handle_error((Error)val);
 	printf("string is %s\n", binary_string);
-	free(binary_string);
 
 	// test compare
 	copy = new BitArray(*bitArray);
@@ -113,32 +114,32 @@ int main() {
 		return handle_error((Error)val);
 	printf("comparing check result: %s\n", val ? "false" : "true");
 
-	// test GetSubArray
-	val = bitArray->fromBinaryStr(str, size);
-	if (val > 1) {
-		if (ErrorHandling(err))
-			return -1;
-	}
-	a = new char[size];
-	if (err = (Error)bitArray->ToBinaryStr(a, size)) {
-		if (ErrorHandling(err))\
-			return -1;
-	}
-	printf("array is: %s\n", a);
-
-	size_t first = 2;
-	size_t last = 9;
-	BitArray* sub_array = SpecialMethdos::GetSubArray(*bitArray, first, last);
-	size = last - first + 1;
-	a = new char[size];
-	if (err = (Error)sub_array->ToBinaryStr(a, size)) {
-		if (ErrorHandling(err))
-			return -1;
-	}
-	printf("first is %d, last is %d, sub array is: %s\n", first, last, a);
+	// test getSubArray
+	val = bitArray->fromBinaryStr(const_binary_string, const_binary_string_size);
+	if (val > 1) 
+		return handle_error((Error)val);
 	
-	SpecialMethdos::PrintHex(*bitArray);
-	SpecialMethdos::PrintHex(*sub_array);
+	val = bitArray->toBinaryStr(binary_string, binary_string_size);
+	if (val > 1)
+		return handle_error((Error)val);
+	printf("array is: %s\n", binary_string);
+
+	first = 2, last = 8;
+	sub_array = SpecialMethdos::getSubArray(*bitArray, first, last);
+	free(binary_string);
+	binary_string = NULL;
+
+	// test printHex
+	binary_string = (char*)malloc((last-first+1) * sizeof(char));
+	val = sub_array->toBinaryStr(binary_string, (last-first));
+	if (val > 1)
+		return handle_error((Error)val);
+	printf("first is %d, last is %d, sub array is: %s\n", first, last, binary_string);
+	
+	SpecialMethdos::printHex(*bitArray);
+	SpecialMethdos::printHex(*sub_array);
+
+	free(binary_string);
 
 	return 0;
 }

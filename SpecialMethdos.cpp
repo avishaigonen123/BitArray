@@ -1,58 +1,40 @@
 #include "SpecialMethdos.h"
 #include "stdio.h"
 
-BitArray* SpecialMethdos::GetSubArray(BitArray& bitarray, size_t first, size_t last)  {
+BitArray* SpecialMethdos::getSubArray(const BitArray& bitarray, size_t first, size_t last)  {
+	// I should do it without new, but still, I'm not sure how to activate the ctor
 	BitArray* res = new BitArray();
+	size_t size = bitarray.getSize();
 	for (size_t i = first, j=0; i <= last; i++, j++)
 	{
-		res->SetAt(j, bitarray.GetAt(i));
+		if (i < size)
+			res->setAt(j, bitarray.getAt(i));
+		else
+			return res;
 	}
 	return res;
 }
 
-void SpecialMethdos::PrintHex(BitArray& bitarray) {
-	size_t size = bitarray.GetSize();
-	int res2 = 0;
-	int j = 0;
-	int bytes = 0;
-	int bits = 0;
-	for (int i = 0; i < size; i++)
-	{
-		res2 = res2 << 1;
-		j = bitarray.GetAt(bytes + bits--);
-		res2 += j;
-		if ((i + 1) % 8) {
-			bytes += 8;
-			bits = 7;
+void SpecialMethdos::printHex(const BitArray& bitarray) {
+	size_t size = bitarray.getSize();
+	size_t res2 = 0;
+	size_t i = 0;
+	size_t bytes = size / 8;
+	size_t bits = size % 8;
+	if (bytes) {
+		for (; i < size; i++) {
+			res2 = res2 << 1;
+			res2 += bitarray.getAt(i);
 		}
+		res2 = res2 << (bits);
 	}
-	res2 = res2 << (size % 4);
+	else {
+		for (; i < size; i++) {
+			res2 = res2 << 1;
+			res2 += bitarray.getAt(i);
+		}
+		res2 = res2 << (8-size);
+	}
 	printf("0x%x\n", res2);
 	return;
-	char* res = new char[size+1];
-	char* ptr = res;
-	int inx = 3;
-	size_t i;
-	*ptr = '\0';
-	printf("0x");
-	for (i = 0; i < size; i++)
-	{
-		*ptr = *ptr << 1;
-		*ptr += bitarray.GetAt((int)i + inx);
-		inx -= 2;
-		if ((!((i + 1) % 4)) ) // divisible by 4
-		{
-			printf("%01x", *ptr);
-			ptr++;
-			*ptr = '\n';
-			inx = 3;
-		}
-	}
-	printf("\n");
-	*ptr = *ptr << (size % 4);
-
-	//printf("hex value: 0x%x\n");
-	delete[] res;
-	res = nullptr;
 }
-
