@@ -3,25 +3,26 @@
 #include <stdlib.h>
 
 BitArray::BitArray() {
-	m_capacity = 0;
-	m_size = 0;
+	m_capacity_bytes = 0;
+	m_size_bits = 0;
 	m_storage = NULL;
-	resize(1);
+	// scale the storage to 1 byte capacity
+	scale(1); 
 }
 
 BitArray::BitArray(const BitArray& copy) {
 	free(m_storage);
 	this->m_storage = NULL;
 
-	this->m_size = copy.m_size;
-	this->m_capacity = copy.m_capacity;
-	this->m_storage = new size_t[this->m_capacity];
-	this->m_storage = (size_t*)malloc(this->m_capacity * sizeof(size_t));
+	this->m_size_bits = copy.m_size_bits;
+	this->m_capacity_bytes = copy.m_capacity_bytes;
+	this->m_storage = (size_t*)malloc(this->m_capacity_bytes * sizeof(size_t));
 	if (!this->m_storage) {
 		printf("Error memory allocation\n");
 		return;
 	}
-	for (size_t i = 0; i < this->m_capacity; i++)
+	// deep copy each byte block
+	for (size_t i = 0; i < this->m_capacity_bytes; i++)
 		this->m_storage[i] = copy.m_storage[i];
 }
 
