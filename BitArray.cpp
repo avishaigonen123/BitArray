@@ -1,6 +1,7 @@
-#include "BitArray.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "BitArray.h"
+#include "Error.h"
 
 BitArray::BitArray() {
 	m_capacity_bytes = 0;
