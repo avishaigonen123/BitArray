@@ -8,7 +8,7 @@ BitArray::BitArray() {
 	m_size_bits = 0;
 	m_storage = NULL;
 	// scale the storage to 1 byte capacity
-	scale(1); 
+	scale(1);
 }
 
 BitArray::BitArray(const BitArray& copy) {

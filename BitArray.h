@@ -33,9 +33,40 @@ public:
 	*/
 	~BitArray();
 
-	void SetAt(size_t index, bool value);
-	bool GetAt(size_t index) const;
+	/**
+	 * @brief method that returns the actual size of bits
+	 * @return the field m_size_bits
+	*/
+	size_t getSize() const;
 
-	bool ToBinaryStr(char* o_binaryStr, size_t binaryStrSize) const;
-	bool FromBinaryStr(const char* i_binaryStr, size_t binaryStrLen);
+	/**
+	 * @brief sets the bit at the given index to the given value
+	 * @param index the given location in bits, not in bytes
+	 * @param value the given value to be set on the exact location
+	*/
+	void setAt(size_t index, bool value);
+
+	/**
+	 * @brief returns the value of the bit on the given index
+	 * @param index the given index to return the value at
+	 * @return the value, if it fails, it can return different error codes
+	*/
+	size_t getAt(size_t index) const;
+
+	/**
+	 * @brief function that gets pointer to binary str and fill it with the bits from our storage
+	 * @param o_binaryStr the buffer we will fill
+	 * @param binaryStrSize the number of bits we want to fill
+	 * @return status code of the operation, can return some error status code too
+	*/
+	size_t toBinaryStr(char* o_binaryStr, size_t binaryStrSize) const;
+
+	/**
+	 * @brief function that gets const string and fill the storage with this string, at the length of another given parameter
+	 * @param i_binaryStr the const string that holds the characters which will be the bits
+	 * @param binaryStrLen the length of string
+	 * @return status code of the operation, can return some error status code too
+	*/
+	size_t fromBinaryStr(const char* i_binaryStr, size_t binaryStrLen);
 };
+# endif
