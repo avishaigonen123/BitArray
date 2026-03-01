@@ -1,6 +1,7 @@
-#include "BitArray.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "BitArray.h"
+#include "Error.h"
 
 BitArray::BitArray() {
 	m_capacity = 0;
@@ -59,10 +60,34 @@ void BitArray::resize(size_t new_capacity) {
 			this->m_storage[i] = NULL;
 		else
 			this->m_storage[i] = tmp[i];
-
 	}
-	m_capacity = new_capacity;
+	
+	this->m_capacity = new_capacity;
+}
 
-	free(tmp);
-	tmp = NULL;
+// - Answer: size_t becuase i don't want negetive value (and then might have heap underflow)
+void BitArray::SetAt(size_t index, bool value) {
+	size_t bytes = index / 8;
+	size_t bits = index % 8;
+	
+	if (this->m_capacity * 8 < index) // we need more capacity
+		resize(bytes + 1);
+	if (this->m_size < index) // enlarge the size
+		this->m_size = index;
+
+	if (value) 
+		this->m_storage[bytes] = this->m_storage[bytes] | (bits ? (1 << bits) : 1); // OR 00010000
+	else
+		this->m_storage[bytes] = this->m_storage[bytes] & (bits ? ~(1 << bits) : 0xff);// AND 11101111
+}
+
+// - Answer: function is const becuase i don't want to change to values of the fields at "this", the class.
+size_t BitArray::GetAt(size_t index) const {
+	size_t bytes = index / 8;
+	size_t bits = index % 8;
+
+	if (index > m_size)
+		return OutOfBound;
+
+	return (this->m_storage[bytes] >> (bits)) & 1; // take the right byte, shift right, and mask with 1 (to get the exact bit)
 }
