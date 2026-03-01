@@ -38,6 +38,19 @@ public:
 	 * @return the field m_size_bits
 	*/
 	size_t getSize() const;
-};
 
+	/**
+	 * @brief sets the bit at the given index to the given value
+	 * @param index the given location in bits, not in bytes
+	 * @param value the given value to be set on the exact location
+	*/
+	void setAt(size_t index, bool value);
+
+	/**
+	 * @brief returns the value of the bit on the given index
+	 * @param index the given index to return the value at
+	 * @return the value, if it fails, it can return different error codes
+	*/
+	size_t getAt(size_t index) const;
+};
 # endif
