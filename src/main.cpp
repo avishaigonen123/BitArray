@@ -49,22 +49,22 @@ int handle_error(Error err) {
  * @param bitArray the instance of the BitArray to work on
  * @return 0 if true, otherwise, it'll return value different then 0
 */
-int test_set_get(BitArray* bitArray) {
+int test_set_get(BitArray* bit_array) {
 	bool value = false;
 	size_t index = 0;
 
-	bitArray->setAt(0, true);
-	bitArray->setAt(2, true);
-	bitArray->setAt(3, true);
-	bitArray->setAt(4, false);
+	bit_array->setAt(0, true);
+	bit_array->setAt(2, true);
+	bit_array->setAt(3, true);
+	bit_array->setAt(4, false);
 
 	index = 3;
-	CHECK_AND_PRINT("val at index %d is %d\n", bitArray->getAt(index), index);
+	CHECK_AND_PRINT("val at index %d is %d\n", bit_array->getAt(index), index);
 
 	value = true;
 	printf("Set value at index %d to %d\n", index, value);
-	bitArray->setAt(index, value);
-	CHECK_AND_PRINT("value at index %d is: %d\n", bitArray->getAt(index), index);
+	bit_array->setAt(index, value);
+	CHECK_AND_PRINT("value at index %d is: %d\n", bit_array->getAt(index), index);
 
 	return 0;
 }
@@ -78,13 +78,13 @@ int test_set_get(BitArray* bitArray) {
  * @param binary_string_size the size of the output string
  * @return 0 if true, otherwise return value different then 0
 */
-int test_binary_IO(BitArray* bitArray, const char* const_binary_string, size_t const_binary_string_size, char* binary_string, size_t binary_string_size) {
+int test_binary_IO(BitArray* bit_array, const char* const_binary_string, size_t const_binary_string_size, char* binary_string, size_t binary_string_size) {
 	size_t val = 0;
 	printf(" - Before binaryIO\nstring is: %s\n", const_binary_string);
-	bitArray->fromBinaryStr(const_binary_string, const_binary_string_size);
+	bit_array->fromBinaryStr(const_binary_string, const_binary_string_size);
 
 	binary_string = (char*)malloc((binary_string_size + 1) * sizeof(char));
-	val = bitArray->toBinaryStr(binary_string, binary_string_size);
+	val = bit_array->toBinaryStr(binary_string, binary_string_size);
 	if (val > 1) {
 		return handle_error((Error)val);
 	}
@@ -99,27 +99,27 @@ int test_binary_IO(BitArray* bitArray, const char* const_binary_string, size_t c
  * @param copy the other BitArray to compare to
  * @return 0 if works, otherwise return value different then 0
 */
-int test_compare(BitArray* bitArray, BitArray* copy) {
+int test_compare(BitArray* bit_array, BitArray* copy) {
 	size_t index = 0, val = 0;
 	
-	copy = new BitArray(*bitArray);
+	copy = new BitArray(*bit_array);
 	if (copy->getCapacity() == 0) {
 		printf("Error copy constructor");
 		return 1;
 	}
-	CHECK_AND_PRINT("value at index %d is: %d\n", bitArray->getAt(index), index);
+	CHECK_AND_PRINT("value at index %d is: %d\n", bit_array->getAt(index), index);
 
-	val = bitArray->compare(*copy);
+	val = bit_array->compare(*copy);
 	if (val > 1) {
 		return handle_error((Error)val);
 	}
 	printf("comparing check result: %s\n", val ? "false" : "true");
 	index = 2;
 	copy->setAt(index, true);
-	CHECK_AND_PRINT("bitArray1: value at index %d is: %d\n", bitArray->getAt(index), index);
-	bitArray->setAt(index, false);
-	CHECK_AND_PRINT("bitArray2: value at index %d is: %d\n", bitArray->getAt(index), index);
-	val = bitArray->compare(*copy);
+	CHECK_AND_PRINT("bitArray1: value at index %d is: %d\n", bit_array->getAt(index), index);
+	bit_array->setAt(index, false);
+	CHECK_AND_PRINT("bitArray2: value at index %d is: %d\n", bit_array->getAt(index), index);
+	val = bit_array->compare(*copy);
 	if (val > 1) {
 		return handle_error((Error)val);
 	}
