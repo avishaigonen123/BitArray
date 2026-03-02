@@ -81,15 +81,6 @@ int test_set_get(BitArray* bitArray) {
 int test_binary_IO(BitArray* bitArray, const char* const_binary_string, size_t const_binary_string_size, char* binary_string, size_t binary_string_size) {
 	size_t val = 0;
 	printf(" - Before binaryIO\nstring is: %s\n", const_binary_string);
-	
-	for (size_t i = 0; i < bitArray->getSize(); i++)
-	{
-		bitArray->setAt(i, bitArray->getAt(i));
-	}
-	for (size_t i = 0; i < bitArray->getSize(); i++)
-	{
-		bitArray->setAt(i, bitArray->getAt(i));
-	}
 	bitArray->fromBinaryStr(const_binary_string, const_binary_string_size);
 
 	binary_string = (char*)malloc((binary_string_size + 1) * sizeof(char));
@@ -147,7 +138,7 @@ int test_compare(BitArray* bitArray, BitArray* copy) {
 */
 int test_sub_array(const BitArray* const bit_array, BitArray* sub_array, char* binary_string, size_t binary_string_size) {
 	size_t val = 0;
-	size_t first_index = 0, last_index = binary_string_size;
+	size_t first_index = 2, last_index = binary_string_size;
 	binary_string = (char*)malloc((binary_string_size + 1) * sizeof(char));
 
 	val = bit_array->toBinaryStr(binary_string, binary_string_size);
@@ -170,39 +161,13 @@ int test_sub_array(const BitArray* const bit_array, BitArray* sub_array, char* b
 	return 0;
 }
 
-/**
- * @brief function that print the BitArray at hex presentation
- * @param bit_array the first bit array to print
- * @param sub_array the second bit array to print
- * @param binary_string string that holds the sub array storage
- * @param first_index the first index of the sub array
- * @param last_index the last index of the sub array
- * @return 0 if true, otherwise it failes and return different value then 0
-*/
-int test_print_hex(BitArray* bit_array, BitArray* sub_array, char* binary_string, size_t first_index, size_t last_index) {
-	size_t val = 0;
-	
-	binary_string = (char*)malloc((last_index - first_index + 1) * sizeof(char));
-	val = sub_array->toBinaryStr(binary_string, (last_index - first_index));
-	if (val > 1) {
-		return handle_error((Error)val);
-	}
-	printf("first is %d, last is %d, sub array is: %s\n", first_index, last_index, binary_string);
-
-	SpecialMethdos::printHex(*bit_array);
-	SpecialMethdos::printHex(*sub_array);
-
-	return 0;
-}
-
 int main() {
 	BitArray* bit_array = new BitArray(), *copy = new BitArray(), *sub_array = new BitArray();;
 	size_t val = 0, index = 0, first_index = 0, last_index = 0;
 	bool value = false;
-	//const char* const_binary_string = "100100011000";
-	const char* const_binary_string = "111111111111";
+	const char* const_binary_string = "100100011000";
 	char* binary_string = NULL;
-	size_t const_binary_string_size = 12, binary_string_size = 12;
+	size_t const_binary_string_size = 13, binary_string_size = 13;
 
 	// test set and get
 	if (test_set_get(bit_array)) {

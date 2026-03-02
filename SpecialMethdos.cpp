@@ -5,12 +5,12 @@
 BitArray* SpecialMethdos::getSubArray(const BitArray* const bitarray, size_t first_index, size_t last_index) {
 	BitArray* sub_array = new BitArray();
 	size_t size = bitarray->getSize();
-	size_t capacity = 0;
+	size_t number_of_bytes = 0;
 	if (first_index > size || last_index > size) {
 		return sub_array;
 	}
-	capacity = ((last_index - first_index) / BYTE);
-	sub_array->scale(capacity);
+	number_of_bytes = ((last_index - first_index) / BYTE);
+	sub_array->scale(number_of_bytes+1);
 	for (size_t i = first_index; i <= last_index; i++)
 	{
 		sub_array->setAt(i-first_index, bitarray->getAt(i));
@@ -29,14 +29,16 @@ void SpecialMethdos::printHex(const BitArray& bitarray) {
 			number_to_print = number_to_print << 1;
 			number_to_print += bitarray.getAt(i);
 		}
-		number_to_print = number_to_print << (4 - (bits % 4));
+		if (bits % 4) {
+			number_to_print = number_to_print << (4 - (bits % 4));
+		}
 	}
 	else {
 		for (size_t i = 0; i < size; i++) {
 			number_to_print = number_to_print << 1;
 			number_to_print += bitarray.getAt(i);
 		}
-		number_to_print = number_to_print << (BYTE-size);
+		number_to_print = number_to_print << (4 - (bits % 4));
 	}
 	printf("0x%x\n", number_to_print);
 	return;

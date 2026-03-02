@@ -7,7 +7,7 @@
 BitArray::BitArray() {
 	m_size_bits = 0;
 	m_capacity_bytes = 1;
-	m_storage = (size_t*)calloc(m_capacity_bytes, BYTE);
+	m_storage = (char*)calloc(m_capacity_bytes, sizeof(char));
 	if (!m_storage)
 		m_capacity_bytes = 0;
 }
@@ -18,7 +18,7 @@ BitArray::BitArray(const BitArray& copy) {
 
 	this->m_size_bits = copy.m_size_bits;
 	this->m_capacity_bytes = copy.m_capacity_bytes;
-	this->m_storage = (size_t*)malloc(this->m_capacity_bytes * sizeof(size_t));
+	this->m_storage = (char*)malloc(this->m_capacity_bytes * sizeof(char));
 	if (!this->m_storage) {
 		printf("Error memory allocation\n");
 		this->m_size_bits = 0;
@@ -45,7 +45,7 @@ size_t BitArray::getCapacity() const {
 }
 
 void BitArray::scale(size_t new_capacity) {
-	size_t* new_storage = NULL;
+	char* new_storage = NULL;
 	size_t inx = 0;
 
 	// only scaling, not shrinking
@@ -53,17 +53,17 @@ void BitArray::scale(size_t new_capacity) {
 		return;
 	}
 
-	this->m_storage = (size_t*)calloc(new_capacity, sizeof(size_t));
-	if (!this->m_storage) {
+	new_storage = (char*)calloc(new_capacity, sizeof(char));
+	if (!new_storage) {
 		this->m_size_bits = 0;
 		this->m_capacity_bytes = 0;
 		printf("Error memory allocation\n");
 		return;
 	}
-
-	new_storage = new size_t[new_capacity];
-	for (; inx < m_capacity_bytes; inx++) {
-		new_storage[inx] = this->m_storage[inx];
+	if (this->m_size_bits) {
+		for (; inx < this->m_capacity_bytes; inx++) {
+			new_storage[inx] = this->m_storage[inx];
+		}
 	}
 	// set new capacity
 	this->m_capacity_bytes = new_capacity;
@@ -128,7 +128,6 @@ size_t BitArray::toBinaryStr(char* o_binaryStr, size_t binaryStrSize) const {
 		}
 		ptr_storage++;
 	}
-	// add NULL at the end of the string
 	*ptr = NULL;
 
 	return 0;
@@ -140,8 +139,8 @@ size_t BitArray::toBinaryStr(char* o_binaryStr, size_t binaryStrSize) const {
  * @param i_binaryStr the string that holds the values
  * @param m_storage the storage will put the values inside
 */
-void from_bytes_to_str(size_t num_of_bytes, const char* i_binaryStr, size_t* m_storage) {
-	size_t* ptr_storage = m_storage;
+void from_bytes_to_str(size_t num_of_bytes, const char* i_binaryStr, char* m_storage) {
+	char* ptr_storage = m_storage;
 	size_t current = 0;
 
 	for (size_t i = 0; i < num_of_bytes; i++) {
@@ -167,7 +166,7 @@ void from_bytes_to_str(size_t num_of_bytes, const char* i_binaryStr, size_t* m_s
  * @param i_binaryStr the string that holds the values
  * @param m_storage the storage will put the values inside
 */
-void from_bits_to_str(size_t num_of_bytes, size_t num_of_bits, const char * i_binaryStr, size_t* m_storage) {
+void from_bits_to_str(size_t num_of_bytes, size_t num_of_bits, const char * i_binaryStr, char* m_storage) {
 	size_t current = 0;
 
 	for (int j = num_of_bits - 1; j >= 0; j--) {
@@ -179,7 +178,7 @@ void from_bits_to_str(size_t num_of_bytes, size_t num_of_bits, const char * i_bi
 			current &= ~1;
 		}
 	}
-	m_storage[num_of_bytes + 1] = current;
+	m_storage[num_of_bytes] = current;
 }
 
 size_t BitArray::fromBinaryStr(const char* i_binaryStr, size_t binaryStrLen) {
@@ -188,7 +187,7 @@ size_t BitArray::fromBinaryStr(const char* i_binaryStr, size_t binaryStrLen) {
 	size_t current = 0, i = 0;
 
 	if (binaryStrLen > this->m_size_bits) {
-		this->scale(num_of_bytes);
+		this->scale(num_of_bytes+1);
 	}
 
 	this->m_size_bits = binaryStrLen;
