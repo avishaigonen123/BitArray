@@ -2,11 +2,12 @@
 #include <stdlib.h>
 #include "BitArray.h"
 #include "Error.h"
+# define BYTE 8
 
 BitArray::BitArray() {
 	m_size_bits = 0;
 	m_capacity_bytes = 1;
-	m_storage = (size_t*)calloc(m_capacity_bytes, sizeof(size_t));
+	m_storage = (size_t*)calloc(m_capacity_bytes, BYTE);
 	if (!m_storage)
 		m_capacity_bytes = 0;
 }
@@ -73,18 +74,18 @@ void BitArray::scale(size_t new_capacity) {
 
 // - Answer: size_t becuase i don't want negetive value (and then might have heap underflow)
 void BitArray::setAt(size_t index, bool value) {
-	size_t bytes = index / sizeof(size_t);
-	size_t bits = index % sizeof(size_t);	
+	size_t bytes = index / BYTE;
+	size_t bits = index % BYTE;	
 
 	// we need more capacity, one above the desired bytes
-	if (this->m_capacity_bytes * sizeof(size_t) < index) {
+	if (this->m_capacity_bytes * BYTE < index) {
 		scale(bytes + 1);
 		if (this->m_capacity_bytes == 0) {
 			printf("scale fails\n");
 			return;
 		}
 	}
-	if (this->m_size_bits < index) {
+	if (this->m_size_bits <= index) {
 		this->m_size_bits = index;
 	}
 	if (value) {
@@ -97,8 +98,8 @@ void BitArray::setAt(size_t index, bool value) {
 
 // - Answer: function is const becuase i don't want to change to values of the fields at "this", the class.
 size_t BitArray::getAt(size_t index) const {
-	size_t bytes = index / sizeof(size_t);
-	size_t bits = index % sizeof(size_t);
+	size_t bytes = index / BYTE;
+	size_t bits = index % BYTE;
 
 	if (index > m_size_bits) {
 		return OutOfBound;
@@ -110,7 +111,7 @@ size_t BitArray::getAt(size_t index) const {
 
 size_t BitArray::toBinaryStr(char* o_binaryStr, size_t binaryStrSize) const {
 	char* ptr = o_binaryStr;
-	size_t* ptr_storage = this->m_storage;
+	char* ptr_storage = this->m_storage;
 	size_t current = 0, i = 0;
 
 	// bigger than the size	
@@ -121,7 +122,7 @@ size_t BitArray::toBinaryStr(char* o_binaryStr, size_t binaryStrSize) const {
 	// we'll move and add the characters. I assume a place had already been allocated at o_binaryStr
 	while (i < binaryStrSize) {
 		current = *ptr_storage;
-		for (int j = 0; j < sizeof(size_t) && i < binaryStrSize; i++, j++) {
+		for (int j = 0; j < BYTE && i < binaryStrSize; i++, j++) {
 			*ptr = ((current >> j) & 1) ? '1' : '0';
 			ptr++;
 		}
@@ -146,7 +147,7 @@ void from_bytes_to_str(size_t num_of_bytes, const char* i_binaryStr, size_t* m_s
 	for (size_t i = 0; i < num_of_bytes; i++) {
 		for (int j = 7; j >= 0; j--) {
 			current = current << 1; // built the number, shift left by 1
-			if (i_binaryStr[sizeof(size_t) * i + j] - '0') { // this is '1'
+			if (i_binaryStr[BYTE * i + j] - '0') { // this is '1'
 				current |= 1;
 			}
 			else {                    // this is '0'
@@ -171,7 +172,7 @@ void from_bits_to_str(size_t num_of_bytes, size_t num_of_bits, const char * i_bi
 
 	for (int j = num_of_bits - 1; j >= 0; j--) {
 		current = current << 1; // built the number, shift left by 1
-		if (i_binaryStr[sizeof(size_t) * num_of_bytes + j] - '0') { // this is '1'
+		if (i_binaryStr[BYTE * num_of_bytes + j] - '0') { // this is '1'
 			current |= 1;
 		}
 		else {            // this is '0'
@@ -182,8 +183,8 @@ void from_bits_to_str(size_t num_of_bytes, size_t num_of_bits, const char * i_bi
 }
 
 size_t BitArray::fromBinaryStr(const char* i_binaryStr, size_t binaryStrLen) {
-	size_t num_of_bytes = binaryStrLen / sizeof(size_t);
-	size_t num_of_bits = binaryStrLen % sizeof(size_t);
+	size_t num_of_bytes = binaryStrLen / BYTE;
+	size_t num_of_bits = binaryStrLen % BYTE;
 	size_t current = 0, i = 0;
 
 	if (binaryStrLen > this->m_size_bits) {
@@ -193,7 +194,7 @@ size_t BitArray::fromBinaryStr(const char* i_binaryStr, size_t binaryStrLen) {
 	this->m_size_bits = binaryStrLen;
 
 	// Check for binary values
-	for (int i = 0; i < binaryStrLen; i++) {
+	for (size_t i = 0; i < binaryStrLen; i++) {
 		if (i_binaryStr[i] != '0' && i_binaryStr[i] != '1') {
 			return NotBinaryValue;
 		}
@@ -226,12 +227,12 @@ size_t BitArray::compare(const BitArray& other) const{
 		if (this->m_storage[j] - other.m_storage[j] != 0) {
 			return 1;
 		}
-		i -= sizeof(size_t);
+		i -= BYTE;
 		j++;
 	}
 	// check for the remains bit
 	if (i) { 
-		for (i = this->m_size_bits % sizeof(size_t); i > 0; i--) {
+		for (i = this->m_size_bits % BYTE; i > 0; i--) {
 			if ((this->m_storage[j] >> i) - (other.m_storage[j] >> i) != 0) {
 				return 1;
 			}

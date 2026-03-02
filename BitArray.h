@@ -7,7 +7,7 @@
  */
 class BitArray {
 private:
-	size_t* m_storage;
+	char* m_storage;
 	size_t m_size_bits;
 	size_t m_capacity_bytes;
 

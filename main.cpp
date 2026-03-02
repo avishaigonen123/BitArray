@@ -81,10 +81,18 @@ int test_set_get(BitArray* bitArray) {
 int test_binary_IO(BitArray* bitArray, const char* const_binary_string, size_t const_binary_string_size, char* binary_string, size_t binary_string_size) {
 	size_t val = 0;
 	printf(" - Before binaryIO\nstring is: %s\n", const_binary_string);
-	binary_string = (char*)malloc((binary_string_size + 1) * sizeof(char));
-
+	
+	for (size_t i = 0; i < bitArray->getSize(); i++)
+	{
+		bitArray->setAt(i, bitArray->getAt(i));
+	}
+	for (size_t i = 0; i < bitArray->getSize(); i++)
+	{
+		bitArray->setAt(i, bitArray->getAt(i));
+	}
 	bitArray->fromBinaryStr(const_binary_string, const_binary_string_size);
-	binary_string = (char*)malloc((binary_string_size+1) * sizeof(char));
+
+	binary_string = (char*)malloc((binary_string_size + 1) * sizeof(char));
 	val = bitArray->toBinaryStr(binary_string, binary_string_size);
 	if (val > 1) {
 		return handle_error((Error)val);
@@ -191,7 +199,8 @@ int main() {
 	BitArray* bit_array = new BitArray(), *copy = new BitArray(), *sub_array = new BitArray();;
 	size_t val = 0, index = 0, first_index = 0, last_index = 0;
 	bool value = false;
-	const char* const_binary_string = "100100011000";
+	//const char* const_binary_string = "100100011000";
+	const char* const_binary_string = "111111111111";
 	char* binary_string = NULL;
 	size_t const_binary_string_size = 12, binary_string_size = 12;
 
@@ -209,7 +218,7 @@ int main() {
 	if (test_compare(bit_array, copy)) {
 		return 1;
 	}
-
+	
 	// test getSubArray
 	if (test_sub_array(bit_array, sub_array, binary_string, binary_string_size)) {
 		return 1;
