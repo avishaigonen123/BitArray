@@ -10,11 +10,11 @@ public:
 	/**
 	 * @brief function that gets bitarray and first + last indexes, and then returns sub array
 	 * @param bitarray the big bit array
-	 * @param first index where the sub array starts
-	 * @param last index where the sub array ends
+	 * @param first_index index where the sub array starts
+	 * @param last_index index where the sub array ends
 	 * @return pointer to the created sub array
 	*/
-	static BitArray* getSubArray(const BitArray& bitarray, size_t first, size_t last);
+	static BitArray* getSubArray(const BitArray* const bitarray, size_t first_index, size_t last_index);
 
 	/**
 	 * @brief function that prints the sub array it gets in hex format

@@ -40,6 +40,12 @@ public:
 	size_t getSize() const;
 
 	/**
+	 * @brief method that returns the capacity
+	 * @return theh field m_capacity_bytes
+	*/
+	size_t getCapacity() const;
+
+	/**
 	 * @brief sets the bit at the given index to the given value
 	 * @param index the given location in bits, not in bytes
 	 * @param value the given value to be set on the exact location
@@ -82,5 +88,8 @@ public:
 	 * @return the result of the comparison (0 equal 1 not equal), or any other error status code if something is wrong
 	*/
 	size_t compare(const BitArray& other) const;
+
+	// declare SpecialMethods as friend in order to use scale
+	friend class SpecialMethdos;
 };
 # endif
